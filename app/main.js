@@ -12,12 +12,19 @@ const server = net.createServer((socket) => {
     console.log(data.toString());
     const strArr = data.toString().split(" ");
     const target = strArr[1];
-    if (target!=='/') {
-      socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
+    if (target==='/') {
+      socket.write('HTTP/1.1 200 OK\r\n\r\n');
       socket.end();
       return;
     }
-    socket.write('HTTP/1.1 200 OK\r\n\r\n');
+    if (target.includes("/echo/")) {
+      const str = target.slice(6);
+      const length = str.length;
+      socket.write('HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: '+length+'\r\n\r\n'+str);
+      socket.end();
+      return;
+    }
+    socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
     socket.end();
   });
 });
