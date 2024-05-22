@@ -11,10 +11,7 @@ const server = net.createServer((socket) => {
   socket.on("data", (data) => {
     console.log(data.toString());
     const strArr = data.toString().split(" ");
-    const method = strArr[0];
     const target = strArr[1];
-    const version = strArr[2];
-    console.log(method, target, version);
     if (target!=='/') {
       socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
       socket.end();
