@@ -31,7 +31,7 @@ const server = net.createServer((socket) => {
       return;
     }
     if (target.includes('user-agent')) {
-      const userAgentHeader = strArr[3].split('\r\n')[0];
+      const userAgentHeader = strArr[4].split('\r\n')[0];
       socket.write(
         'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ' +
           userAgentHeader.length +
