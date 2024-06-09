@@ -22,8 +22,8 @@ const server = net.createServer((socket) => {
     }
     if (target.includes('/echo/')) {
       const encodingHeader = strArr[4].split('\r\n')[0];
+      const str = target.slice(6);
       if (encodingHeader === 'gzip') {
-        const str = target.slice(6);
         const length = str.length;
         socket.write(
           'HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: ' +
@@ -33,8 +33,12 @@ const server = net.createServer((socket) => {
         );
         socket.end();
       } else {
-        socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
-        socket.end();
+        socket.write(
+          'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ' +
+            str.length +
+            '\r\n\r\n' +
+            str
+        );
       }
       return;
     }
