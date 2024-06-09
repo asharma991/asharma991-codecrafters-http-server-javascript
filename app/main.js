@@ -30,7 +30,7 @@ const server = net.createServer((socket) => {
       socket.end();
       return;
     }
-    if (target.includes('user-agent')) {
+    if (target.includes('/user-agent')) {
       const userAgentHeader = strArr[4].split('\r\n')[0];
       socket.write(
         'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ' +
@@ -41,6 +41,25 @@ const server = net.createServer((socket) => {
       socket.end();
       return;
     }
+    if (target.includes('/files/')) {
+      const file = target.slice(7);
+      const fs = require('fs');
+      try {
+        const data = fs.readFileSync(file);
+        socket.write(
+          'HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ' +
+            data.length +
+            '\r\n\r\n' +
+            data
+        );
+        socket.end();
+      } catch (e) {
+        socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
+        socket.end();
+      }
+      return;
+    }
+
     socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
     socket.end();
   });
