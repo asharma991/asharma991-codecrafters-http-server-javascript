@@ -45,7 +45,8 @@ const server = net.createServer((socket) => {
       const file = target.slice(7);
       const fs = require('fs');
       try {
-        const data = fs.readFileSync(file).toString();
+        const directory = process.argv[3];
+        const data = fs.readFileSync(`${directory}/${file}`).toString();
         socket.write(
           'HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ' +
             data.length +
