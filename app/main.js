@@ -21,7 +21,7 @@ const server = net.createServer((socket) => {
       return;
     }
     if (target.includes('/echo/')) {
-      const encodingHeader = strArr[3].split('\r\n')[0];
+      const encodingHeader = strArr[4].split('\r\n')[0];
       if (encodingHeader === 'gzip') {
         const str = target.slice(6);
         const length = str.length;
