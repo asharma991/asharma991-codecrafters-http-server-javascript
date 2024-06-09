@@ -21,15 +21,21 @@ const server = net.createServer((socket) => {
       return;
     }
     if (target.includes('/echo/')) {
-      const str = target.slice(6);
-      const length = str.length;
-      socket.write(
-        'HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ' +
-          length +
-          '\r\n\r\n' +
-          str
-      );
-      socket.end();
+      const encodingHeader = strArr[3].split('\r\n')[0];
+      if (encodingHeader === 'gzip') {
+        const str = target.slice(6);
+        const length = str.length;
+        socket.write(
+          'HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: ' +
+            length +
+            '\r\n\r\n' +
+            str
+        );
+        socket.end();
+      } else {
+        socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
+        socket.end();
+      }
       return;
     }
     if (target.includes('/user-agent')) {
@@ -70,6 +76,7 @@ const server = net.createServer((socket) => {
         socket.end();
       }
     }
+    // if()
 
     socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
     socket.end();
